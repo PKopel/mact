@@ -1,6 +1,6 @@
 # MA/CT
 
-Mock API/Call Translation - proxy server for testing changes to the http servers API.
+Mock API/Call Translation - proxy server for testing changes to http servers API.
 
 ## Usage
 
