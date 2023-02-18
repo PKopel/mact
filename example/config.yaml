@@ -1,0 +1,11 @@
+services:
+  - host: "http://localhost:8080"
+    endpoints:
+      - path: /ping
+        verb: "GET"
+        statusCodes:
+          - 200
+        changes:
+          - type: add
+            field: proxy
+            value: works
