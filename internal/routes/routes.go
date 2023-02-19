@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -46,11 +47,19 @@ func setupEndopint(endpoint conf.EndpointConfig, host string) func(w http.Respon
 			body = mact.ApplyChanges(body, endpoint.Changes)
 		}
 
-		log.Printf("Writing response body: %v", body)
+		bytes, err := json.Marshal(body)
+		if err != nil {
+			log.Fatalf("Error while encoding response: %v", err)
+		}
+		log.Printf("Writing response body: %v", string(bytes))
 
 		copyHeader(w.Header(), resp.Header)
+		w.Header().Set("Content-Length", fmt.Sprint(len(bytes)))
 		w.WriteHeader(resp.StatusCode)
-		json.NewEncoder(w).Encode(body)
+		_, err = w.Write(bytes)
+		if err != nil {
+			log.Fatalf("Error while writing response: %v", err)
+		}
 	}
 }
 

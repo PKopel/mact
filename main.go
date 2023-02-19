@@ -16,7 +16,7 @@ var serverPort = flag.String("port", "8000", "Port to listen on")
 
 func main() {
 	flag.Parse()
-	log.SetPrefix("[MA/CT]")
+	log.SetPrefix("[MA/CT] ")
 	router := mux.NewRouter()
 	config := conf.ReadConfig(*configFile)
 	routes.SetupRouter(router, config)
