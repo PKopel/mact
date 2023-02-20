@@ -12,6 +12,7 @@ Example config file:
 ```yaml
 services:
   - host: "http://localhost:8080"
+    trustAllCerts: true
     endpoints:
       - path: /ping
         verb: "GET"

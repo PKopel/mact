@@ -39,8 +39,9 @@ type EndpointConfig struct {
 }
 
 type ServiceConfig struct {
-	Host      string           `yaml:"host"`
-	Endpoints []EndpointConfig `yaml:"endpoints"`
+	Host          string           `yaml:"host"`
+	TrustAllCerts bool             `yaml:"trustAllCerts"`
+	Endpoints     []EndpointConfig `yaml:"endpoints"`
 }
 
 type MactConfig struct {

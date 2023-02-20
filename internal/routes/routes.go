@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,17 +22,25 @@ func copyHeader(dst, src http.Header) {
 	}
 }
 
-func setupEndopint(endpoint conf.EndpointConfig, host string) func(w http.ResponseWriter, r *http.Request) {
+func setupEndopint(endpoint conf.EndpointConfig, service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		server := host + r.URL.Path
+		server := service.Host + r.URL.Path
 		request, err := http.NewRequest(string(endpoint.Verb), server, r.Body)
 		if err != nil {
 			log.Fatalf("Error while creating request: %v", err)
 		}
 		copyHeader(request.Header, r.Header)
 
+		transport := http.DefaultTransport
+		if service.TrustAllCerts {
+			log.Printf("Trusting all certificates")
+			transport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+		}
+		client := &http.Client{
+			Transport: transport,
+		}
+
 		log.Printf("Sending request to %v", server)
-		client := &http.Client{}
 		resp, err := client.Do(request)
 		if err != nil {
 			log.Fatalf("Error while making request: %v", err)
@@ -63,18 +72,25 @@ func setupEndopint(endpoint conf.EndpointConfig, host string) func(w http.Respon
 	}
 }
 
-func setupIgnored(host string) func(w http.ResponseWriter, r *http.Request) {
+func setupIgnored(service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		server := host + r.URL.Path
-		request, err := http.NewRequest(r.Method, host+r.URL.Path, r.Body)
+		server := service.Host + r.URL.Path
+		request, err := http.NewRequest(r.Method, server, r.Body)
 		if err != nil {
 			log.Fatalf("Error while creating request: %v", err)
 		}
 		copyHeader(request.Header, r.Header)
 
-		log.Printf("Sending request to %v", server)
+		transport := http.DefaultTransport
+		if service.TrustAllCerts {
+			log.Printf("Trusting all certificates")
+			transport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+		}
+		client := &http.Client{
+			Transport: transport,
+		}
 
-		client := &http.Client{}
+		log.Printf("Sending request to %v", server)
 		resp, err := client.Do(request)
 		if err != nil {
 			log.Fatalf("Error while making request: %v", err)
@@ -92,12 +108,12 @@ func SetupRouter(router *mux.Router, config conf.MactConfig) {
 		log.Printf("Setting up service %v", service.Host)
 		// setup endpoints to be processed
 		for _, endpoint := range service.Endpoints {
-			handlerFunc := setupEndopint(endpoint, service.Host)
+			handlerFunc := setupEndopint(endpoint, service)
 			router.Path(endpoint.Path).HandlerFunc(handlerFunc).Methods(string(endpoint.Verb))
 			log.Printf("Setting up endpoint %v", endpoint.Path)
 		}
 		// setup endpoints to be ignored
-		handlerFunc := setupIgnored(service.Host)
+		handlerFunc := setupIgnored(service)
 		router.PathPrefix("/").HandlerFunc(handlerFunc)
 
 	}
