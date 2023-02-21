@@ -24,7 +24,7 @@ func copyHeader(dst, src http.Header) {
 
 func setupEndopint(endpoint conf.EndpointConfig, service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		server := service.Host + r.URL.Path
+		server := service.Host + r.URL.Path + "?" + r.URL.RawQuery
 		request, err := http.NewRequest(string(endpoint.Verb), server, r.Body)
 		if err != nil {
 			log.Fatalf("Error while creating request: %v", err)
@@ -74,7 +74,7 @@ func setupEndopint(endpoint conf.EndpointConfig, service conf.ServiceConfig) fun
 
 func setupIgnored(service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		server := service.Host + r.URL.Path
+		server := service.Host + r.URL.Path + "?" + r.URL.RawQuery
 		request, err := http.NewRequest(r.Method, server, r.Body)
 		if err != nil {
 			log.Fatalf("Error while creating request: %v", err)

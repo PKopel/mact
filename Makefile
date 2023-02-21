@@ -1,5 +1,5 @@
 PROGRAM_NAME ?= mact
-VERSION ?= v0.0.1
+VERSION ?= v0.0.3
 BIN_DIR ?= bin
 
 SUPPORTED_ARCH ?= amd64 arm64
