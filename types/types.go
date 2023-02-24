@@ -1,9 +1,11 @@
+// +kubebuilder:object:generate=true
 package types
 
 import (
 	"log"
 	"os"
 
+	deepcopy "github.com/barkimedes/go-deepcopy"
 	"gopkg.in/yaml.v2"
 )
 
@@ -60,4 +62,27 @@ func ReadConfig(configFile string) MactConfig {
 	}
 
 	return config
+}
+
+// DeepCopyInto is a deepcopy function, copying the receiver, writing into out. in must be non-nil.
+func (in *Change) DeepCopyInto(out *Change) {
+	*out = *in
+	if in.Value != nil {
+		in, out := &in.Value, &out.Value
+		var err error
+		*out, err = deepcopy.Anything(*in)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+// DeepCopy is a deepcopy function, copying the receiver, creating a new Change.
+func (in *Change) DeepCopy() *Change {
+	if in == nil {
+		return nil
+	}
+	out := new(Change)
+	in.DeepCopyInto(out)
+	return out
 }
