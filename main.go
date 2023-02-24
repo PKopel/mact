@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	conf "github.com/PKopel/mact/internal/config"
 	"github.com/PKopel/mact/internal/routes"
+	"github.com/PKopel/mact/types"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +18,7 @@ func main() {
 	flag.Parse()
 	log.SetPrefix("[MA/CT] ")
 	router := mux.NewRouter()
-	config := conf.ReadConfig(*configFile)
+	config := types.ReadConfig(*configFile)
 	routes.SetupRouter(router, config)
 
 	srv := &http.Server{

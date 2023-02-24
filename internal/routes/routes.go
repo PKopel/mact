@@ -8,9 +8,9 @@ import (
 	"log"
 	"net/http"
 
-	conf "github.com/PKopel/mact/internal/config"
 	mact "github.com/PKopel/mact/internal/json"
 	"github.com/PKopel/mact/internal/utils"
+	"github.com/PKopel/mact/types"
 	"github.com/gorilla/mux"
 )
 
@@ -22,7 +22,7 @@ func copyHeader(dst, src http.Header) {
 	}
 }
 
-func setupEndopint(endpoint conf.EndpointConfig, service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
+func setupEndopint(endpoint types.EndpointConfig, service types.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		server := service.Host + r.URL.Path + "?" + r.URL.RawQuery
 		request, err := http.NewRequest(string(endpoint.Verb), server, r.Body)
@@ -72,7 +72,7 @@ func setupEndopint(endpoint conf.EndpointConfig, service conf.ServiceConfig) fun
 	}
 }
 
-func setupIgnored(service conf.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
+func setupIgnored(service types.ServiceConfig) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		server := service.Host + r.URL.Path + "?" + r.URL.RawQuery
 		request, err := http.NewRequest(r.Method, server, r.Body)
@@ -102,7 +102,7 @@ func setupIgnored(service conf.ServiceConfig) func(w http.ResponseWriter, r *htt
 	}
 }
 
-func SetupRouter(router *mux.Router, config conf.MactConfig) {
+func SetupRouter(router *mux.Router, config types.MactConfig) {
 
 	for _, service := range config.Services {
 		log.Printf("Setting up service %v", service.Host)

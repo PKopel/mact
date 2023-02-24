@@ -4,8 +4,8 @@ import (
 	"log"
 	"strings"
 
-	conf "github.com/PKopel/mact/internal/config"
 	"github.com/PKopel/mact/internal/utils"
+	"github.com/PKopel/mact/types"
 )
 
 type JSON map[string]interface{}
@@ -26,7 +26,7 @@ func FindField(object JSON, fieldPath []string) (JSON, []string) {
 	return object, nil
 }
 
-func ApplyChanges(body JSON, changes []conf.Change) JSON {
+func ApplyChanges(body JSON, changes []types.Change) JSON {
 
 	for _, change := range changes {
 		fullPath := strings.Split(change.Field, ".")
@@ -37,9 +37,9 @@ func ApplyChanges(body JSON, changes []conf.Change) JSON {
 			continue
 		}
 		switch change.Type {
-		case conf.Add, conf.Modify:
+		case types.Add, types.Modify:
 			object[*field] = change.Value
-		case conf.Remove:
+		case types.Remove:
 			delete(object, *field)
 		}
 	}

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	conf "github.com/PKopel/mact/internal/config"
+	"github.com/PKopel/mact/types"
 )
 
 func TestFindField(t *testing.T) {
@@ -118,7 +118,7 @@ func TestFindField(t *testing.T) {
 func TestApplyChanges(t *testing.T) {
 	cases := map[string]struct {
 		object  JSON
-		changes []conf.Change
+		changes []types.Change
 		result  JSON
 	}{
 		"shallow, one add": {
@@ -128,9 +128,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Add,
+					Type:  types.Add,
 					Field: "field3",
 					Value: "new value",
 				},
@@ -150,9 +150,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Modify,
+					Type:  types.Modify,
 					Field: "field1",
 					Value: "changed value",
 				},
@@ -169,9 +169,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Remove,
+					Type:  types.Remove,
 					Field: "field1",
 				},
 			},
@@ -186,19 +186,19 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Add,
+					Type:  types.Add,
 					Field: "field3",
 					Value: "new value",
 				},
 				{
-					Type:  conf.Modify,
+					Type:  types.Modify,
 					Field: "field1",
 					Value: "changed value",
 				},
 				{
-					Type:  conf.Remove,
+					Type:  types.Remove,
 					Field: "field2",
 				},
 			},
@@ -214,9 +214,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Add,
+					Type:  types.Add,
 					Field: "field1.inner2",
 					Value: "new value",
 				},
@@ -236,9 +236,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Modify,
+					Type:  types.Modify,
 					Field: "field1.inner",
 					Value: "changed value",
 				},
@@ -257,9 +257,9 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Remove,
+					Type:  types.Remove,
 					Field: "field1.inner",
 				},
 			},
@@ -275,14 +275,14 @@ func TestApplyChanges(t *testing.T) {
 				},
 				"field2": "value2",
 			},
-			changes: []conf.Change{
+			changes: []types.Change{
 				{
-					Type:  conf.Add,
+					Type:  types.Add,
 					Field: "field1.inner2",
 					Value: "new value",
 				},
 				{
-					Type:  conf.Modify,
+					Type:  types.Modify,
 					Field: "field1.inner",
 					Value: &JSON{
 						"inner3": "value3",
@@ -290,7 +290,7 @@ func TestApplyChanges(t *testing.T) {
 					},
 				},
 				{
-					Type:  conf.Remove,
+					Type:  types.Remove,
 					Field: "field1.inner.inner3",
 				},
 			},
