@@ -57,7 +57,7 @@ jobs:
       - name: Upload binary
         uses: actions/upload-artifact@v4.0.0
         with:
-          name: binaries
+          name: bin
           path: bin/*
           if-no-files-found: error
           retention-days: 5
@@ -66,7 +66,13 @@ jobs:
     needs: [build]
     strategy:
       matrix:
-        hash: [hash-linux, hash-macos, hash-windows]
+        hash: 
+          - hash-linux-amd64
+          - hash-linux-arm64
+          - hash-macos-amd64
+          - hash-macos-arm64
+          - hash-windows-amd64
+          - hash-windows-arm64
     permissions:
       actions: read # To read the workflow path.
       id-token: write # To sign the provenance.
@@ -85,15 +91,16 @@ jobs:
       - name: Download linux binaries
         uses: actions/download-artifact@v4.1.0
         with:
-          name: binaries
+          path: bin
+          merge-multiple: true
 
       - name: Upload assets
         uses: softprops/action-gh-release@v0.1.15
         with:
           files: |
-            mact-${{ github.ref_name }}-linux-amd64
-            mact-${{ github.ref_name }}-linux-arm64
-            mact-${{ github.ref_name }}-darwin-amd64
-            mact-${{ github.ref_name }}-darwin-arm64
-            mact-${{ github.ref_name }}-windows-amd64.exe
-            mact-${{ github.ref_name }}-windows-arm64.exe
+            bin/mact-${{ github.ref_name }}-linux-amd64
+            bin/mact-${{ github.ref_name }}-linux-arm64
+            bin/mact-${{ github.ref_name }}-darwin-amd64
+            bin/mact-${{ github.ref_name }}-darwin-arm64
+            bin/mact-${{ github.ref_name }}-windows-amd64.exe
+            bin/mact-${{ github.ref_name }}-windows-arm64.exe
