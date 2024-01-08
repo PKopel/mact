@@ -66,7 +66,13 @@ jobs:
     needs: [build]
     strategy:
       matrix:
-        hash: [hash-linux, hash-macos, hash-windows]
+        hash: 
+          - hash-linux-amd64
+          - hash-linux-arm64
+          - hash-macos-amd64
+          - hash-macos-arm64
+          - hash-windows-amd64
+          - hash-windows-arm64
     permissions:
       actions: read # To read the workflow path.
       id-token: write # To sign the provenance.
