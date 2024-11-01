@@ -95,7 +95,7 @@ jobs:
           merge-multiple: true
 
       - name: Upload assets
-        uses: softprops/action-gh-release@v2.0.8
+        uses: softprops/action-gh-release@v2.0.9
         with:
           files: |
             bin/mact-${{ github.ref_name }}-linux-amd64
