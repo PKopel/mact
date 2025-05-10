@@ -19,6 +19,8 @@ jobs:
       hash-macos-arm64: ${{ steps.hash.outputs.hash-mac-arm }}
       hash-windows-amd64: ${{ steps.hash.outputs.hash-win-amd }}
       hash-windows-arm64: ${{ steps.hash.outputs.hash-win-arm }}
+    permissions:
+      contents: write
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
