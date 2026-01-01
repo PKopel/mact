@@ -57,7 +57,7 @@ jobs:
           echo "hash-win-arm=$(sha256sum bin/mact-${{ github.ref_name }}-windows-arm64.exe | base64 -w0)" >> $GITHUB_OUTPUT
 
       - name: Upload binary
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: bin
           path: bin/*
